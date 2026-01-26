@@ -1,27 +1,30 @@
 // --- DATOS ---
 const MENU = {
     tacos: [
-        { name: "Taco Pollo Curry", priceSolo: 5.95, priceMenu: 7.95, img: "assets/taco_pollo_curry.jpg", desc: "Pollo marinado al curry, salsa queso." },
+        { name: "Taco Tender", priceSolo: 6.95, priceMenu: 8.95, img: "assets/taco_tender.jpg", desc: "Tenders de pollo, salsa queso.", badge: "🏆 TOP VENTAS" },
+        { name: "Taco Cordon Bleu", priceSolo: 6.95, priceMenu: 8.95, img: "assets/taco_cordon_bleu.jpg", desc: "Cordon Bleu crujiente, salsa queso.", badge: "⭐ FAVORITO" },
         { name: "Taco Kifta", priceSolo: 5.95, priceMenu: 7.95, img: "assets/taco_kifta.jpg", desc: "Carne picada especiada, salsa queso." },
-        { name: "Taco Mixto", priceSolo: 6.95, priceMenu: 8.95, img: "assets/taco_mixto.jpg", desc: "Pollo + Ternera, salsa queso." },
-        { name: "Taco Cordon Bleu", priceSolo: 6.95, priceMenu: 8.95, img: "assets/taco_cordon_bleu.jpg", desc: "Cordon Bleu crujiente, salsa queso." },
-        { name: "Taco Tender", priceSolo: 6.95, priceMenu: 8.95, img: "assets/taco_tender.jpg", desc: "Tenders de pollo, salsa queso." }
+        { name: "Taco Pollo Curry", priceSolo: 5.95, priceMenu: 7.95, img: "assets/taco_pollo_curry.jpg", desc: "Pollo marinado al curry, salsa queso." },
+        { name: "Taco Mixto", priceSolo: 6.95, priceMenu: 8.95, img: "assets/taco_mixto.jpg", desc: "Pollo + Ternera, salsa queso." }
     ],
     burgers: [
-        { name: "Big Cabra", priceSolo: 7.50, priceMenu: 9.50, img: "assets/burger1.jpg", desc: "100g Ternera, Queso Cabra, Cebolla C." },
+        { name: "Big Cabra", priceSolo: 7.50, priceMenu: 9.50, img: "assets/burger1.jpg", desc: "100g Ternera, Queso Cabra, Cebolla C.", badge: "⭐ FAVORITO" },
         { name: "Doble Cheese", priceSolo: 4.50, priceMenu: 6.50, img: "assets/burger1.jpg", desc: "Doble carne, Doble Cheddar." },
         { name: "Burger Pollo", priceSolo: 5.95, priceMenu: 7.95, img: "assets/burger2.jpg", desc: "Pollo crujiente, Lechuga, Mayo." }
     ],
     bowls: [
-        { name: "Kifta Bowl", priceSolo: 6.95, noMenu: true, img: "assets/bowl.jpg", desc: "Base patatas, Ternera, Bacon, Mozzarella." },
-        { name: "Pollo Curry Bowl", priceSolo: 6.95, noMenu: true, img: "assets/bowl.jpg", desc: "Base patatas, Pollo Curry, Cheddar." }
-    ],
-    extras: [
-        { name: "Nuggets x6", priceSolo: 3.90, noMenu: true, img: "assets/nuggets_balls.jpg" },
-        { name: "Bacon Cheese Fries", priceSolo: 2.50, noMenu: true, img: "assets/bacon_cheese_fries.jpg" },
-        { name: "Bebida Extra", priceSolo: 1.90, noMenu: true, isDrink: true, img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=300" },
-        { name: "Postre", priceSolo: 3.50, noMenu: true, img: "assets/dessert.jpg" }
-    ]
+        bowls: [
+            { name: "Bowl Tenders", priceSolo: 7.95, noMenu: true, img: "assets/bowl.jpg", desc: "Base patatas, Tenders de Pollo, Salsa Queso.", badge: "🔥 TOP VENTAS" },
+            { name: "Bowl Cordon Bleu", priceSolo: 7.95, noMenu: true, img: "assets/bowl.jpg", desc: "Base patatas, Cordon Bleu, Salsa Queso." },
+            { name: "Kifta Bowl", priceSolo: 6.95, noMenu: true, img: "assets/bowl.jpg", desc: "Base patatas, Ternera, Bacon, Mozzarella." },
+            { name: "Pollo Curry Bowl", priceSolo: 6.95, noMenu: true, img: "assets/bowl.jpg", desc: "Base patatas, Pollo Curry, Cheddar." }
+        ],
+        extras: [
+            { name: "Nuggets x6", priceSolo: 3.90, noMenu: true, img: "assets/nuggets_balls.jpg" },
+            { name: "Bacon Cheese Fries", priceSolo: 2.50, noMenu: true, img: "assets/bacon_cheese_fries.jpg", badge: "NUEVO" },
+            { name: "Bebida Extra", priceSolo: 1.90, noMenu: true, isDrink: true, img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=300" },
+            { name: "Postre", priceSolo: 3.50, noMenu: true, img: "assets/dessert.jpg" }
+        ]
 };
 
 const SALSAS = ["Pita", "Mahonesa", "Barbacoa", "Ketchup", "Andaluza", "Curry", "Samurai", "Tasty", "Biggy"];
@@ -86,8 +89,13 @@ function renderSection(type, items, containerId) {
             ? `<button onclick="addSimple('${item.name}', ${item.priceSolo})" class="bg-primary text-white w-9 h-9 rounded-lg flex items-center justify-center font-bold shadow-lg shadow-primary/30">+</button>`
             : `<button onclick="openConfig('${item.name}', ${item.priceSolo}, ${item.priceMenu})" class="bg-primary text-white w-9 h-9 rounded-lg flex items-center justify-center font-bold shadow-lg shadow-primary/30">+</button>`;
 
+        const badgeHtml = item.badge
+            ? `<div class="absolute top-2 right-2 bg-yellow-500 text-black text-[10px] font-bold px-2 py-1 rounded shadow-lg z-10 animate-pulse">${item.badge}</div>`
+            : '';
+
         container.innerHTML += `
             <div class="bg-card p-3 rounded-xl border border-white/5 flex gap-4 relative overflow-hidden group">
+                ${badgeHtml}
                 <div class="w-24 h-24 rounded-lg overflow-hidden shrink-0 bg-black">
                     <img src="${item.img}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                 </div>
@@ -229,6 +237,30 @@ function addToCart() {
     cart.push({ title: title, desc: detail, price: total });
     updateCartUI();
     closeModal();
+
+    // Trigger Upsell if it's not an extra
+    if (!isDrinkOnly) {
+        showUpsell();
+    }
+}
+
+function showUpsell() {
+    const upsellModal = document.getElementById('modal-upsell');
+    if (upsellModal) {
+        upsellModal.classList.remove('hidden');
+        upsellModal.classList.add('flex');
+    }
+}
+
+function closeUpsell() {
+    document.getElementById('modal-upsell').classList.add('hidden');
+    document.getElementById('modal-upsell').classList.remove('flex');
+}
+
+function addUpsellItem(name, price) {
+    cart.push({ title: name, desc: 'Extra Upsell', price: price });
+    updateCartUI();
+    closeUpsell();
 }
 
 function addSimple(name, price) {

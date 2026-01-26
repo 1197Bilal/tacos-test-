@@ -185,7 +185,10 @@
                         <label class="cursor-pointer">
                             <input type="radio" name="format" value="Menú" class="peer hidden" onchange="updateTotal()">
                             <div
-                                class="bg-black border border-white/10 rounded-xl p-4 text-center peer-checked:bg-secondary peer-checked:text-black peer-checked:border-secondary transition-all">
+                                class="bg-black border border-white/10 rounded-xl p-4 text-center peer-checked:bg-secondary peer-checked:text-black peer-checked:border-secondary transition-all relative overflow-hidden">
+                                <div
+                                    class="absolute top-0 right-0 bg-red-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-bl-lg shadow-sm">
+                                    RECOMENDADO</div>
                                 <span class="block font-bold">MENÚ</span>
                                 <span class="text-xs opacity-70" id="price-menu-display"></span>
                                 <span class="text-[10px] block mt-1 leading-none font-bold">+ Patatas y Bebida</span>
@@ -272,16 +275,73 @@
         </div>
     </div>
 
-    <div id="float-btn" class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md z-30 hidden">
+    <div id="float-btn" class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md z-30 hidden animate-bounce">
         <button onclick="openCheckout()"
-            class="w-full bg-secondary text-black p-4 rounded-full shadow-2xl shadow-orange-500/20 border-2 border-white/20 flex items-center justify-between group hover:scale-105 transition-transform">
-            <div class="flex items-center gap-3">
+            class="w-full bg-secondary text-black p-4 rounded-full shadow-2xl shadow-orange-500/20 border-2 border-white/20 flex items-center justify-between group hover:scale-105 transition-transform relative overflow-hidden">
+            <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
+            <div class="flex items-center gap-3 relative z-10">
                 <div class="bg-black text-secondary w-8 h-8 rounded-full flex items-center justify-center font-bold"
                     id="cart-count">0</div>
                 <span class="font-display font-bold text-lg tracking-wide">VER PEDIDO</span>
             </div>
             <span class="font-bold text-lg" id="float-total">0.00€</span>
         </button>
+    </div>
+
+    <!-- MODAL UPSELL -->
+    <div id="modal-upsell"
+        class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in">
+        <div
+            class="bg-[#1a1818] border border-white/10 w-full max-w-sm rounded-2xl overflow-hidden shadow-2xl animate-slide-up relative">
+
+            <div class="p-5 text-center">
+                <div class="inline-block bg-primary/20 p-3 rounded-full mb-3">
+                    <span class="text-3xl">🍟</span>
+                </div>
+                <h3 class="font-display text-2xl font-bold text-white mb-1">¿TE APETECE ALGO MÁS?</h3>
+                <p class="text-gray-400 text-sm mb-6">Completa tu pedido con estos favoritos 🔥</p>
+
+                <div class="space-y-3">
+                    <button onclick="addUpsellItem('Nuggets x6', 3.90)"
+                        class="w-full bg-[#2a2828] hover:bg-[#333] border border-white/5 rounded-xl p-3 flex items-center justify-between group transition-colors">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-lg bg-black overflow-hidden">
+                                <img src="assets/nuggets_balls.jpg" class="w-full h-full object-cover">
+                            </div>
+                            <div class="text-left">
+                                <div class="font-bold text-white">Nuggets x6</div>
+                                <div class="text-xs text-secondary font-bold">3.90€</div>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                            +</div>
+                    </button>
+
+                    <button onclick="addUpsellItem('Bacon Cheese Fries', 2.50)"
+                        class="w-full bg-[#2a2828] hover:bg-[#333] border border-white/5 rounded-xl p-3 flex items-center justify-between group transition-colors">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-lg bg-black overflow-hidden">
+                                <img src="assets/bacon_cheese_fries.jpg" class="w-full h-full object-cover">
+                            </div>
+                            <div class="text-left">
+                                <div class="font-bold text-white">Bacon Cheese Fries</div>
+                                <div class="text-xs text-secondary font-bold">2.50€</div>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                            +</div>
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-4 border-t border-white/5 bg-black/20">
+                <button onclick="closeUpsell()" class="w-full text-gray-500 hover:text-white text-sm font-medium py-2">
+                    No, gracias, ir al carrito
+                </button>
+            </div>
+        </div>
     </div>
 
     <script src="script.js?v=final"></script>
