@@ -1,24 +1,24 @@
 // --- DATOS ---
 const MENU = {
     tacos: [
-        { name: "Taco Pollo Curry", priceSolo: 5.95, priceMenu: 7.95, img: "https://images.unsplash.com/photo-1599974982964-8a9cb5a6d44c?w=400&q=80", desc: "Pollo marinado al curry, salsa queso." },
-        { name: "Taco Kifta", priceSolo: 5.95, priceMenu: 7.95, img: "https://images.unsplash.com/photo-1599974982964-8a9cb5a6d44c?w=400&q=80", desc: "Carne picada especiada, salsa queso." },
-        { name: "Taco Mixto", priceSolo: 6.95, priceMenu: 8.95, img: "https://images.unsplash.com/photo-1599974982964-8a9cb5a6d44c?w=400&q=80", desc: "Pollo + Ternera, salsa queso." },
-        { name: "Taco Cordon Bleu", priceSolo: 6.95, priceMenu: 8.95, img: "https://images.unsplash.com/photo-1599974982964-8a9cb5a6d44c?w=400&q=80", desc: "Cordon Bleu crujiente, salsa queso." },
-        { name: "Taco Tender", priceSolo: 6.95, priceMenu: 8.95, img: "https://images.unsplash.com/photo-1599974982964-8a9cb5a6d44c?w=400&q=80", desc: "Tenders de pollo, salsa queso." }
+        { name: "Taco Pollo Curry", priceSolo: 5.95, priceMenu: 7.95, img: "assets/burger2.jpg", desc: "Pollo marinado al curry, salsa queso." },
+        { name: "Taco Kifta", priceSolo: 5.95, priceMenu: 7.95, img: "assets/burger2.jpg", desc: "Carne picada especiada, salsa queso." },
+        { name: "Taco Mixto", priceSolo: 6.95, priceMenu: 8.95, img: "assets/burger2.jpg", desc: "Pollo + Ternera, salsa queso." },
+        { name: "Taco Cordon Bleu", priceSolo: 6.95, priceMenu: 8.95, img: "assets/burger2.jpg", desc: "Cordon Bleu crujiente, salsa queso." },
+        { name: "Taco Tender", priceSolo: 6.95, priceMenu: 8.95, img: "assets/burger2.jpg", desc: "Tenders de pollo, salsa queso." }
     ],
     burgers: [
-        { name: "Big Cabra", priceSolo: 7.50, priceMenu: 9.50, img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80", desc: "100g Ternera, Queso Cabra, Cebolla C." },
-        { name: "Doble Cheese", priceSolo: 4.50, priceMenu: 6.50, img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80", desc: "Doble carne, Doble Cheddar." },
-        { name: "Burger Pollo", priceSolo: 5.95, priceMenu: 7.95, img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80", desc: "Pollo crujiente, Lechuga, Mayo." }
+        { name: "Big Cabra", priceSolo: 7.50, priceMenu: 9.50, img: "assets/burger1.jpg", desc: "100g Ternera, Queso Cabra, Cebolla C." },
+        { name: "Doble Cheese", priceSolo: 4.50, priceMenu: 6.50, img: "assets/burger1.jpg", desc: "Doble carne, Doble Cheddar." },
+        { name: "Burger Pollo", priceSolo: 5.95, priceMenu: 7.95, img: "assets/burger2.jpg", desc: "Pollo crujiente, Lechuga, Mayo." }
     ],
     bowls: [
-        { name: "Kifta Bowl", priceSolo: 6.95, noMenu: true, img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80", desc: "Base patatas, Ternera, Bacon, Mozzarella." },
-        { name: "Pollo Curry Bowl", priceSolo: 6.95, noMenu: true, img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80", desc: "Base patatas, Pollo Curry, Cheddar." }
+        { name: "Kifta Bowl", priceSolo: 6.95, noMenu: true, img: "assets/bowl.jpg", desc: "Base patatas, Ternera, Bacon, Mozzarella." },
+        { name: "Pollo Curry Bowl", priceSolo: 6.95, noMenu: true, img: "assets/bowl.jpg", desc: "Base patatas, Pollo Curry, Cheddar." }
     ],
     extras: [
-        { name: "Nuggets x6", priceSolo: 3.90, noMenu: true, img: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=300" },
-        { name: "Cheddar Bacon", priceSolo: 3.90, noMenu: true, img: "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?w=300" },
+        { name: "Nuggets x6", priceSolo: 3.90, noMenu: true, img: "assets/nuggets.jpg" },
+        { name: "Cheddar Bacon", priceSolo: 3.90, noMenu: true, img: "assets/nuggets.jpg" },
         { name: "Bebida Extra", priceSolo: 1.90, noMenu: true, isDrink: true, img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=300" },
         { name: "Red Bull", priceSolo: 2.50, noMenu: true, img: "https://images.unsplash.com/photo-1551462147-ff29053bfc14?w=300" }
     ]
