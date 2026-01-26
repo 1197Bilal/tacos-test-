@@ -1,11 +1,11 @@
 // --- DATOS ---
 const MENU = {
     tacos: [
-        { name: "Taco Pollo Curry", priceSolo: 5.95, priceMenu: 7.95, img: "assets/burger2.jpg", desc: "Pollo marinado al curry, salsa queso." },
-        { name: "Taco Kifta", priceSolo: 5.95, priceMenu: 7.95, img: "assets/burger2.jpg", desc: "Carne picada especiada, salsa queso." },
-        { name: "Taco Mixto", priceSolo: 6.95, priceMenu: 8.95, img: "assets/burger2.jpg", desc: "Pollo + Ternera, salsa queso." },
-        { name: "Taco Cordon Bleu", priceSolo: 6.95, priceMenu: 8.95, img: "assets/burger2.jpg", desc: "Cordon Bleu crujiente, salsa queso." },
-        { name: "Taco Tender", priceSolo: 6.95, priceMenu: 8.95, img: "assets/burger2.jpg", desc: "Tenders de pollo, salsa queso." }
+        { name: "Taco Pollo Curry", priceSolo: 5.95, priceMenu: 7.95, img: "assets/taco_pollo_curry.jpg", desc: "Pollo marinado al curry, salsa queso." },
+        { name: "Taco Kifta", priceSolo: 5.95, priceMenu: 7.95, img: "assets/taco_kifta.jpg", desc: "Carne picada especiada, salsa queso." },
+        { name: "Taco Mixto", priceSolo: 6.95, priceMenu: 8.95, img: "assets/taco_mixto.jpg", desc: "Pollo + Ternera, salsa queso." },
+        { name: "Taco Cordon Bleu", priceSolo: 6.95, priceMenu: 8.95, img: "assets/taco_cordon_bleu.jpg", desc: "Cordon Bleu crujiente, salsa queso." },
+        { name: "Taco Tender", priceSolo: 6.95, priceMenu: 8.95, img: "assets/taco_tender.jpg", desc: "Tenders de pollo, salsa queso." }
     ],
     burgers: [
         { name: "Big Cabra", priceSolo: 7.50, priceMenu: 9.50, img: "assets/burger1.jpg", desc: "100g Ternera, Queso Cabra, Cebolla C." },
