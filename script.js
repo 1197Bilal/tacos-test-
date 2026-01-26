@@ -17,10 +17,10 @@ const MENU = {
         { name: "Pollo Curry Bowl", priceSolo: 6.95, noMenu: true, img: "assets/bowl.jpg", desc: "Base patatas, Pollo Curry, Cheddar." }
     ],
     extras: [
-        { name: "Nuggets x6", priceSolo: 3.90, noMenu: true, img: "assets/nuggets.jpg" },
-        { name: "Cheddar Bacon", priceSolo: 3.90, noMenu: true, img: "assets/nuggets.jpg" },
+        { name: "Nuggets x6", priceSolo: 3.90, noMenu: true, img: "assets/nuggets_balls.jpg" },
+        { name: "Patatas Fritas", priceSolo: 2.50, noMenu: true, img: "assets/sides.jpg" },
         { name: "Bebida Extra", priceSolo: 1.90, noMenu: true, isDrink: true, img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=300" },
-        { name: "Red Bull", priceSolo: 2.50, noMenu: true, img: "https://images.unsplash.com/photo-1551462147-ff29053bfc14?w=300" }
+        { name: "Postre", priceSolo: 3.50, noMenu: true, img: "assets/dessert.jpg" }
     ]
 };
 
