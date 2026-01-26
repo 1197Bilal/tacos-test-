@@ -18,7 +18,7 @@ const MENU = {
     ],
     extras: [
         { name: "Nuggets x6", priceSolo: 3.90, noMenu: true, img: "assets/nuggets_balls.jpg" },
-        { name: "Patatas Fritas", priceSolo: 2.50, noMenu: true, img: "assets/sides.jpg" },
+        { name: "Bacon Cheese Fries", priceSolo: 2.50, noMenu: true, img: "assets/bacon_cheese_fries.jpg" },
         { name: "Bebida Extra", priceSolo: 1.90, noMenu: true, isDrink: true, img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=300" },
         { name: "Postre", priceSolo: 3.50, noMenu: true, img: "assets/dessert.jpg" }
     ]
