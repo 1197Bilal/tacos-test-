@@ -13,18 +13,17 @@ const MENU = {
         { name: "Burger Pollo", priceSolo: 5.95, priceMenu: 7.95, img: "assets/burger2.jpg", desc: "Pollo crujiente, Lechuga, Mayo." }
     ],
     bowls: [
-        bowls: [
-            { name: "Bowl Tenders", priceSolo: 7.95, noMenu: true, img: "assets/bowl.jpg", desc: "Base patatas, Tenders de Pollo, Salsa Queso.", badge: "🔥 TOP VENTAS" },
-            { name: "Bowl Cordon Bleu", priceSolo: 7.95, noMenu: true, img: "assets/bowl.jpg", desc: "Base patatas, Cordon Bleu, Salsa Queso." },
-            { name: "Kifta Bowl", priceSolo: 6.95, noMenu: true, img: "assets/bowl.jpg", desc: "Base patatas, Ternera, Bacon, Mozzarella." },
-            { name: "Pollo Curry Bowl", priceSolo: 6.95, noMenu: true, img: "assets/bowl.jpg", desc: "Base patatas, Pollo Curry, Cheddar." }
-        ],
-        extras: [
-            { name: "Nuggets x6", priceSolo: 3.90, noMenu: true, img: "assets/nuggets_balls.jpg" },
-            { name: "Bacon Cheese Fries", priceSolo: 2.50, noMenu: true, img: "assets/bacon_cheese_fries.jpg", badge: "NUEVO" },
-            { name: "Bebida Extra", priceSolo: 1.90, noMenu: true, isDrink: true, img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=300" },
-            { name: "Postre", priceSolo: 3.50, noMenu: true, img: "assets/dessert.jpg" }
-        ]
+        { name: "Bowl Tenders", priceSolo: 7.95, noMenu: true, img: "assets/bowl.jpg", desc: "Base patatas, Tenders de Pollo, Salsa Queso.", badge: "🔥 TOP VENTAS" },
+        { name: "Bowl Cordon Bleu", priceSolo: 7.95, noMenu: true, img: "assets/bowl.jpg", desc: "Base patatas, Cordon Bleu, Salsa Queso." },
+        { name: "Kifta Bowl", priceSolo: 6.95, noMenu: true, img: "assets/bowl.jpg", desc: "Base patatas, Ternera, Bacon, Mozzarella." },
+        { name: "Pollo Curry Bowl", priceSolo: 6.95, noMenu: true, img: "assets/bowl.jpg", desc: "Base patatas, Pollo Curry, Cheddar." }
+    ],
+    extras: [
+        { name: "Nuggets x6", priceSolo: 3.90, noMenu: true, img: "assets/nuggets_balls.jpg" },
+        { name: "Bacon Cheese Fries", priceSolo: 2.50, noMenu: true, img: "assets/bacon_cheese_fries.jpg", badge: "NUEVO" },
+        { name: "Bebida Extra", priceSolo: 1.90, noMenu: true, isDrink: true, img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=300" },
+        { name: "Postre", priceSolo: 3.50, noMenu: true, img: "assets/dessert.jpg" }
+    ]
 };
 
 const SALSAS = ["Pita", "Mahonesa", "Barbacoa", "Ketchup", "Andaluza", "Curry", "Samurai", "Tasty", "Biggy"];
