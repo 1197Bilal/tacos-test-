@@ -317,19 +317,26 @@ function toggleBizum() {
 let autocomplete;
 
 function initAutocomplete() {
-    const input = document.getElementById("cust-address");
+    try {
+        const input = document.getElementById("cust-address");
+        if (!input) return;
 
-    // Restringir a España
-    const options = {
-        componentRestrictions: { country: "es" },
-        fields: ["address_components", "geometry", "icon", "name"],
-        strictBounds: false, // Poner true si defines bounds específicos de Villalba
-    };
+        // Restringir a España
+        const options = {
+            componentRestrictions: { country: "es" },
+            fields: ["address_components", "geometry", "icon", "name"],
+            strictBounds: false,
+        };
 
-    autocomplete = new google.maps.places.Autocomplete(input, options);
-
-    // Escuchar cuando el usuario selecciona una dirección
-    autocomplete.addListener("place_changed", fillInAddress);
+        if (typeof google !== 'undefined' && google.maps && google.maps.places) {
+            autocomplete = new google.maps.places.Autocomplete(input, options);
+            autocomplete.addListener("place_changed", fillInAddress);
+        } else {
+            console.warn("Google Maps API not loaded or invalid Key. Using manual input.");
+        }
+    } catch (e) {
+        console.error("Error initializing Google Autocomplete:", e);
+    }
 }
 
 function fillInAddress() {
