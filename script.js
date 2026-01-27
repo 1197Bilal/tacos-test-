@@ -313,6 +313,31 @@ function toggleBizum() {
     document.getElementById('bizum-details').style.display = val === 'Bizum' ? 'block' : 'none';
 }
 
+// --- GOOGLE MAPS AUTOCOMPLETE ---
+let autocomplete;
+
+function initAutocomplete() {
+    const input = document.getElementById("cust-address");
+
+    // Restringir a España
+    const options = {
+        componentRestrictions: { country: "es" },
+        fields: ["address_components", "geometry", "icon", "name"],
+        strictBounds: false, // Poner true si defines bounds específicos de Villalba
+    };
+
+    autocomplete = new google.maps.places.Autocomplete(input, options);
+
+    // Escuchar cuando el usuario selecciona una dirección
+    autocomplete.addListener("place_changed", fillInAddress);
+}
+
+function fillInAddress() {
+    const place = autocomplete.getPlace();
+    // Aquí podrías forzar que el CP sea 28400 analizando place.address_components
+}
+
+// --- ENVIAR PEDIDO ---
 function sendOrder() {
     const name = document.getElementById('cust-name').value;
     const addr = document.getElementById('cust-address').value;
@@ -320,9 +345,19 @@ function sendOrder() {
 
     if (!name || !addr) { alert("⚠️ Faltan datos: Nombre y Dirección son obligatorios"); return; }
 
+    // VALIDACIÓN DE DIRECCIÓN (COLLADO VILLALBA - 28400)
+    // Opción 1: Validación estricta (si usas la API correctamente)
+    // Comprobamos si la dirección contiene "Villalba" o el CP "28400"
+    const isValidLocation = addr.toLowerCase().includes("villalba") || addr.includes("28400");
+
+    if (!isValidLocation) {
+        const confirm = window.confirm("⚠️ La dirección no parece ser de Collado Villalba (28400).\n\n¿Estás seguro de que es correcta? Solo repartimos en esta zona.");
+        if (!confirm) return;
+    }
+
     const itemsStr = cart.map(i => `▪️ ${i.title} (${i.price.toFixed(2)}€)\n   └ ${i.desc}`).join('\n');
     const total = cart.reduce((a, b) => a + b.price, 0).toFixed(2);
-    const phone = "34636745584"; // TU NÚMERO
+    const phone = "34642708622"; // TU NÚMERO
 
     const text = `🔥 *NUEVO PEDIDO APP*\n👤 *${name}*\n📍 *${addr}*\n💳 Pago: ${pay}\n\n🛒 *PEDIDO:*\n${itemsStr}\n\n💰 *TOTAL: ${total}€*`;
 
