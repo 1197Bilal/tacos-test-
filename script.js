@@ -84,9 +84,12 @@ window.onload = function () {
 function renderSection(type, items, containerId) {
     const container = document.getElementById(containerId);
     items.forEach(item => {
-        const btn = item.noMenu
+        // Bowls (y cualquier otro item de sección principal) deben poder personalizarse
+        const isCustomizable = type === 'bowls' || !item.noMenu;
+
+        const btn = !isCustomizable
             ? `<button onclick="addSimple('${item.name}', ${item.priceSolo})" class="bg-primary text-white w-9 h-9 rounded-lg flex items-center justify-center font-bold shadow-lg shadow-primary/30">+</button>`
-            : `<button onclick="openConfig('${item.name}', ${item.priceSolo}, ${item.priceMenu})" class="bg-primary text-white w-9 h-9 rounded-lg flex items-center justify-center font-bold shadow-lg shadow-primary/30">+</button>`;
+            : `<button onclick="openConfig('${item.name}', ${item.priceSolo}, ${item.priceMenu || 0})" class="bg-primary text-white w-9 h-9 rounded-lg flex items-center justify-center font-bold shadow-lg shadow-primary/30">+</button>`;
 
         const badgeHtml = item.badge
             ? `<div class="absolute top-2 right-2 bg-yellow-500 text-black text-[10px] font-bold px-2 py-1 rounded shadow-lg z-10 animate-pulse">${item.badge}</div>`
@@ -123,12 +126,20 @@ function openConfig(name, pSolo, pMenu) {
         document.getElementById('step-extras').classList.add('hidden');
         tempItem.format = "Solo";
     } else {
-        document.getElementById('step-format').classList.remove('hidden');
+        // Si no tiene precio de menú (ej: Bowls), ocultamos el paso 1 (Formato)
+        if (pMenu === 0) {
+            document.getElementById('step-format').classList.add('hidden');
+            tempItem.format = "Solo";
+        } else {
+            document.getElementById('step-format').classList.remove('hidden');
+            document.querySelector('input[name="format"][value="Solo"]').checked = true;
+        }
+
         document.getElementById('step-sauce').classList.remove('hidden');
         document.getElementById('step-extras').classList.remove('hidden');
-        document.querySelector('input[name="format"][value="Solo"]').checked = true;
+
         document.getElementById('price-solo-display').innerText = pSolo.toFixed(2) + '€';
-        document.getElementById('price-menu-display').innerText = pMenu.toFixed(2) + '€';
+        document.getElementById('price-menu-display').innerText = (pMenu || 0).toFixed(2) + '€';
     }
 
     // Renderizar Bebidas
@@ -225,9 +236,11 @@ function addToCart() {
         const mainSauce = document.querySelector('input[name="mainSauce"]:checked').value;
         const extras = Array.from(document.querySelectorAll('input[name="extraSauce"]:checked')).map(cb => cb.value);
 
-        detail = `${format} • Salsa ${mainSauce}`;
+        // Si el formato está oculto (Bowls), no ponemos "Solo • "
+        const formatStr = document.getElementById('step-format').classList.contains('hidden') ? "" : `${format} • `;
+        detail = `${formatStr}Salsa ${mainSauce}`;
 
-        if (format === 'Menú') {
+        if (format === 'Menú' && !document.getElementById('step-drink').classList.contains('hidden')) {
             const selectedDrink = document.querySelector('input[name="menuDrink"]:checked').value;
             detail += ` • Bebida: ${selectedDrink}`;
         }

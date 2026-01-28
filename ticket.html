@@ -7,15 +7,19 @@
     <title>Ticket Pedido</title>
     <style>
         body {
-            font-family: 'Courier New', Courier, monospace;
-            /* Fuente tipo Ticket */
+            font-family: Arial, sans-serif;
+            /* Más legible que Courier en impresoras térmicas */
             background-color: #fff;
             color: #000;
-            width: 300px;
-            /* Ancho estándar impresoras térmicas */
+            width: 280px;
+            /* Ajuste fino de ancho */
             margin: 0 auto;
             padding: 10px;
-            font-size: 12px;
+            font-size: 13px;
+            /* Un pelín más grande */
+            font-weight: bold;
+            /* Todo en negrita para que la aguja de la impresora marque bien */
+            line-height: 1.2;
         }
 
         .center {
@@ -23,28 +27,30 @@
         }
 
         .bold {
-            font-weight: bold;
+            font-weight: 900;
         }
 
         .line {
-            border-bottom: 1px dashed #000;
+            border-bottom: 2px solid #000;
             margin: 10px 0;
         }
 
         .item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 5px;
+            margin-bottom: 2px;
         }
 
         .total {
-            font-size: 16px;
+            font-size: 18px;
             margin-top: 10px;
+            border-top: 2px solid #000;
+            padding-top: 5px;
         }
 
         .footer {
             margin-top: 20px;
-            font-size: 10px;
+            font-size: 11px;
             text-align: center;
         }
 
