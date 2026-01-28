@@ -459,17 +459,29 @@ function sendOrder() {
         if (!confirm) return;
     }
 
-    const itemsStr = cart.map(i => `▪️ ${i.title} (${i.price.toFixed(2)}€)\n   └ ${i.desc}`).join('\n');
+    const itemsStr = cart.map(i => `▪️ ${i.title.toUpperCase()} (${i.price.toFixed(2)}€)\n   └ ${i.desc}`).join('\n');
     const totalValue = cart.reduce((a, b) => a + b.price, 0).toFixed(2);
     const phoneRestaurant = "34642708622"; // TU NÚMERO
 
-    // Acción 1: Generar y descargar PDF
+    // Generar y descargar archivos para impresión (PDF y TXT)
     generateOrderPDF(name, addr, pay, cart, totalValue, phoneClient);
-
-    // Acción 2: Generar y descargar NOTEPAD (.txt)
     generateNotepad(name, phoneClient, addr, pay, cart, totalValue);
 
-    // Acción 3: Abrir WhatsApp con el texto detallado (incluyendo teléfono cliente)
-    const text = `🔥 *NUEVO PEDIDO APP*\n👤 *${name}*\n📞 *Tel:* ${phoneClient}\n📍 *${addr}*\n💳 Pago: ${pay}\n\n🛒 *PEDIDO:*\n${itemsStr}\n\n💰 *TOTAL: ${totalValue}€*`;
-    window.open(`https://wa.me/${phoneRestaurant}?text=${encodeURIComponent(text)}`, '_blank');
+    // Formatear mensaje de WhatsApp como "Ticket de Caja" (Monoespaciado)
+    let ticketText = `\`\`\`\n`;
+    ticketText += `TASTY TACOS - TICKET\n`;
+    ticketText += `--------------------\n`;
+    ticketText += `CLIENTE: ${name}\n`;
+    ticketText += `TEL: ${phoneClient}\n`;
+    ticketText += `DIR: ${addr}\n`;
+    ticketText += `PAGO: ${pay}\n`;
+    ticketText += `--------------------\n`;
+    cart.forEach((item, i) => {
+        ticketText += `${i + 1}. ${item.title.substring(0, 15)}.. ${item.price.toFixed(2)}€\n`;
+    });
+    ticketText += `--------------------\n`;
+    ticketText += `TOTAL: ${totalValue}€\n`;
+    ticketText += `\`\`\``;
+
+    window.open(`https://wa.me/${phoneRestaurant}?text=${encodeURIComponent(ticketText)}`, '_blank');
 }
