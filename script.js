@@ -306,6 +306,7 @@ function remove(i) {
 function openCheckout() {
     document.getElementById('modal-checkout').classList.remove('hidden');
     document.getElementById('modal-checkout').classList.add('flex');
+    validateCheckoutForm();
 }
 
 function closeCheckout() {
@@ -319,22 +320,28 @@ function togglePaymentDetails() {
     document.getElementById('change-field').style.display = val === 'Efectivo' ? 'block' : 'none';
 }
 
+function fillInAddress() {
+    // Cuando Google Maps Autocomplete rellena el campo, no salta el evento 'oninput'
+    // Por eso forzamos la validación aquí
+    setTimeout(validateCheckoutForm, 100);
+}
+
 function validateCheckoutForm() {
     const name = document.getElementById('cust-name').value.trim();
     const phone = document.getElementById('cust-phone').value.trim();
     const addr = document.getElementById('cust-address').value.trim();
     const btn = document.getElementById('btn-confirm-order');
 
-    if (name.length > 2 && phone.length > 7 && addr.length > 5) {
+    if (name.length >= 2 && phone.length >= 9 && addr.length >= 5) {
         // ILUMINAR BOTÓN
         btn.disabled = false;
         btn.classList.remove('bg-gray-600', 'text-white/50', 'cursor-not-allowed', 'opacity-50');
-        btn.classList.add('bg-[#25D366]', 'text-black', 'shadow-[0_0_20px_rgba(37,211,102,0.6)]', 'scale-[1.02]');
+        btn.classList.add('bg-[#25D366]', 'text-black', 'shadow-[0_0_25px_rgba(37,211,102,0.8)]', 'scale-[1.02]');
     } else {
         // APAGAR BOTÓN
         btn.disabled = true;
         btn.classList.add('bg-gray-600', 'text-white/50', 'cursor-not-allowed', 'opacity-50');
-        btn.classList.remove('bg-[#25D366]', 'text-black', 'shadow-[0_0_20px_rgba(37,211,102,0.6)]', 'scale-[1.02]');
+        btn.classList.remove('bg-[#25D366]', 'text-black', 'shadow-[0_0_25px_rgba(37,211,102,0.8)]', 'scale-[1.02]');
     }
 }
 
