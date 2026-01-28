@@ -158,17 +158,21 @@ function openConfig(name, pSolo, pMenu) {
     // Renderizar Salsas
     const sList = document.getElementById('sauces-list');
     sList.innerHTML = SALSAS.map((s, i) => `
-        <label class="cursor-pointer">
-            <input type="radio" name="mainSauce" value="${s}" class="sauce-radio hidden" ${i === 0 ? 'checked' : ''} onchange="updateTotal()">
-            <div class="bg-black border border-white/10 rounded-lg py-3 text-center text-xs font-bold text-gray-300 hover:border-primary/50">${s}</div>
+        <label class="cursor-pointer group">
+            <input type="radio" name="mainSauce" value="${s}" class="peer hidden" ${i === 0 ? 'checked' : ''} onchange="updateTotal()">
+            <div class="bg-black border border-white/10 rounded-lg py-3 text-center text-xs font-bold text-gray-300 transition-all peer-checked:bg-primary peer-checked:text-black peer-checked:border-primary group-hover:border-primary/50">
+                ${s}
+            </div>
         </label>`).join('');
 
     // Renderizar Extras
     const eList = document.getElementById('extras-list');
     eList.innerHTML = SALSAS.map(s => `
-        <label class="cursor-pointer">
-            <input type="checkbox" name="extraSauce" value="${s}" class="extra-checkbox hidden" onchange="updateTotal()">
-            <div class="bg-black border border-white/10 rounded-lg py-3 text-center text-xs text-gray-500 hover:border-secondary/50">${s}</div>
+        <label class="cursor-pointer group">
+            <input type="checkbox" name="extraSauce" value="${s}" class="peer hidden" onchange="updateTotal()">
+            <div class="bg-black border border-white/10 rounded-lg py-3 text-center text-xs font-bold text-gray-500 transition-all peer-checked:bg-secondary peer-checked:text-black peer-checked:border-secondary group-hover:border-secondary/50">
+                ${s}
+            </div>
         </label>`).join('');
 
     // Resetear nota
