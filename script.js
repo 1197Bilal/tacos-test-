@@ -160,6 +160,9 @@ function openConfig(name, pSolo, pMenu) {
             <div class="bg-black border border-white/10 rounded-lg py-3 text-center text-xs text-gray-500 hover:border-secondary/50">${s}</div>
         </label>`).join('');
 
+    // Resetear nota
+    document.getElementById('item-note').value = "";
+
     updateTotal();
     document.getElementById('modal-config').classList.remove('hidden');
     document.getElementById('modal-config').classList.add('flex');
@@ -232,8 +235,9 @@ function addToCart() {
     }
 
     const title = isDrinkOnly ? "Bebida Extra" : tempItem.name;
+    const note = document.getElementById('item-note').value.trim();
 
-    cart.push({ title: title, desc: detail, price: total });
+    cart.push({ title: title, desc: detail, price: total, note: note });
     updateCartUI();
     closeModal();
 
@@ -281,6 +285,7 @@ function updateCartUI() {
             <div>
                 <div class="font-bold text-white text-sm">${item.title}</div>
                 <div class="text-xs text-gray-400">${item.desc}</div>
+                ${item.note ? `<div class="text-[10px] text-yellow-500 mt-1">📝 ${item.note}</div>` : ''}
             </div>
             <div class="flex flex-col items-end">
                 <span class="font-bold text-secondary text-sm">${item.price.toFixed(2)}€</span>
@@ -446,7 +451,6 @@ function sendOrder() {
     const name = document.getElementById('cust-name').value;
     const phoneClient = document.getElementById('cust-phone').value;
     const addr = document.getElementById('cust-address').value;
-    const note = document.getElementById('cust-note').value;
     const pay = document.getElementById('cust-payment').value;
 
     if (!name || !phoneClient || !addr) {
@@ -463,7 +467,11 @@ function sendOrder() {
         if (!confirm) return;
     }
 
-    const itemsStr = cart.map(i => `▪️ ${i.title.toUpperCase()} (${i.price.toFixed(2)}€)\n   └ ${i.desc}`).join('\n');
+    const itemsStr = cart.map(i => {
+        let txt = `▪️ ${i.title.toUpperCase()} (${i.price.toFixed(2)}€)\n   └ ${i.desc}`;
+        if (i.note) txt += `\n   📝 NOTA: ${i.note}`;
+        return txt;
+    }).join('\n\n');
     const totalValue = cart.reduce((a, b) => a + b.price, 0).toFixed(2);
     const phoneRestaurant = "34642708622"; // TU NÚMERO
 
@@ -472,7 +480,6 @@ function sendOrder() {
         name: name,
         phone: phoneClient,
         addr: addr,
-        note: note,
         pay: pay,
         cart: cart,
         total: totalValue
@@ -493,7 +500,6 @@ function sendOrder() {
     let waText = `🔥 *NUEVO PEDIDO APP*\n`;
     waText += `👤 ${name}\n📞 ${phoneClient}\n`;
     waText += `📍 ${addr}\n`;
-    if (note) waText += `📝 Nota: ${note}\n`;
     waText += `💳 Pago: ${pay}\n\n`;
     waText += `🛒 *PEDIDO:*\n${itemsStr}\n\n`;
     waText += `💰 *TOTAL: ${totalValue}€*\n\n`;
