@@ -339,22 +339,119 @@ function initAutocomplete() {
     }
 }
 
-function fillInAddress() {
-    const place = autocomplete.getPlace();
-    // Aquí podrías forzar que el CP sea 28400 analizando place.address_components
+// --- GENERAR PDF ---
+function generateOrderPDF(name, addr, pay, cart, total) {
+    try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        // Header Tasty Tacos
+        doc.setFillColor(26, 24, 24); // #1a1818
+        doc.rect(0, 0, 210, 40, 'F');
+
+        doc.setTextColor(255, 255, 255);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(22);
+        doc.text("TASTY TACOS", 105, 20, { align: "center" });
+
+        doc.setFontSize(10);
+        doc.text("TICKET DE PEDIDO - COLLADO VILLALBA", 105, 30, { align: "center" });
+
+        // Datos Cliente
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(12);
+        doc.text("DATOS DEL PEDIDO:", 20, 55);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.text(`Cliente: ${name}`, 20, 65);
+        doc.text(`Teléfono: ${phoneClient || 'No proporcionado'}`, 20, 72);
+        doc.text(`Dirección: ${addr}`, 20, 79);
+        doc.text(`Pago: ${pay}`, 20, 86);
+        doc.text(`Fecha: ${new Date().toLocaleString()}`, 20, 93);
+
+        doc.setDrawColor(200, 200, 200);
+        doc.line(20, 100, 190, 100);
+
+        // Productos
+        doc.setFont("helvetica", "bold");
+        doc.text("PRODUCTOS:", 20, 110);
+
+        let y = 120;
+        cart.forEach((item, i) => {
+            doc.setFont("helvetica", "bold");
+            doc.text(`${i + 1}. ${item.title}`, 20, y);
+            doc.text(`${item.price.toFixed(2)}€`, 180, y, { align: "right" });
+
+            y += 5;
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(8);
+            doc.setTextColor(100, 100, 100);
+            const lines = doc.splitTextToSize(item.desc || "Unidad Individual", 160);
+            doc.text(lines, 25, y);
+
+            y += (lines.length * 4) + 6;
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(10);
+            if (y > 270) { doc.addPage(); y = 20; }
+        });
+
+        // Total
+        doc.setDrawColor(166, 30, 30);
+        doc.setLineWidth(1);
+        doc.line(20, y, 190, y);
+
+        doc.setFontSize(16);
+        doc.setFont("helvetica", "bold");
+        doc.text(`TOTAL: ${total}€`, 190, y + 15, { align: "right" });
+
+        doc.save(`Ticket_Tasty_${name.replace(/\s/g, '_')}.pdf`);
+    } catch (e) {
+        console.error("PDF Error:", e);
+        alert("Error al generar el PDF, pero el pedido se enviará por WhatsApp.");
+    }
+}
+
+// --- GENERAR NOTEPAD (.txt) ---
+function generateNotepad(name, phone, addr, pay, cart, total) {
+    let content = `TASTY TACOS - TICKET DE PEDIDO\n`;
+    content += `==============================\n\n`;
+    content += `CLIENTE: ${name}\n`;
+    content += `TELÉFONO: ${phone}\n`;
+    content += `DIRECCIÓN: ${addr}\n`;
+    content += `PAGO: ${pay}\n`;
+    content += `FECHA: ${new Date().toLocaleString()}\n\n`;
+    content += `PRODUCTOS:\n`;
+    content += `----------\n`;
+
+    cart.forEach((item, i) => {
+        content += `${i + 1}. ${item.title.toUpperCase()} - ${item.price.toFixed(2)}€\n`;
+        content += `   [${item.desc || 'Individual'}]\n\n`;
+    });
+
+    content += `----------\n`;
+    content += `TOTAL A PAGAR: ${total}€\n\n`;
+    content += `¡Gracias por tu pedido! 🔥`;
+
+    const blob = new Blob([content], { type: 'text/plain' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `Ticket_Tasty_${name.replace(/\s/g, '_')}.txt`;
+    link.click();
 }
 
 // --- ENVIAR PEDIDO ---
 function sendOrder() {
     const name = document.getElementById('cust-name').value;
+    const phoneClient = document.getElementById('cust-phone').value;
     const addr = document.getElementById('cust-address').value;
     const pay = document.getElementById('cust-payment').value;
 
-    if (!name || !addr) { alert("⚠️ Faltan datos: Nombre y Dirección son obligatorios"); return; }
+    if (!name || !phoneClient || !addr) {
+        alert("⚠️ Faltan datos: Nombre, Teléfono y Dirección son obligatorios");
+        return;
+    }
 
     // VALIDACIÓN DE DIRECCIÓN (COLLADO VILLALBA - 28400)
-    // Opción 1: Validación estricta (si usas la API correctamente)
-    // Comprobamos si la dirección contiene "Villalba" o el CP "28400"
     const isValidLocation = addr.toLowerCase().includes("villalba") || addr.includes("28400");
 
     if (!isValidLocation) {
@@ -363,10 +460,16 @@ function sendOrder() {
     }
 
     const itemsStr = cart.map(i => `▪️ ${i.title} (${i.price.toFixed(2)}€)\n   └ ${i.desc}`).join('\n');
-    const total = cart.reduce((a, b) => a + b.price, 0).toFixed(2);
-    const phone = "34642708622"; // TU NÚMERO
+    const totalValue = cart.reduce((a, b) => a + b.price, 0).toFixed(2);
+    const phoneRestaurant = "34642708622"; // TU NÚMERO
 
-    const text = `🔥 *NUEVO PEDIDO APP*\n👤 *${name}*\n📍 *${addr}*\n💳 Pago: ${pay}\n\n🛒 *PEDIDO:*\n${itemsStr}\n\n💰 *TOTAL: ${total}€*`;
+    // Acción 1: Generar y descargar PDF
+    generateOrderPDF(name, addr, pay, cart, totalValue, phoneClient);
 
-    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
+    // Acción 2: Generar y descargar NOTEPAD (.txt)
+    generateNotepad(name, phoneClient, addr, pay, cart, totalValue);
+
+    // Acción 3: Abrir WhatsApp con el texto detallado (incluyendo teléfono cliente)
+    const text = `🔥 *NUEVO PEDIDO APP*\n👤 *${name}*\n📞 *Tel:* ${phoneClient}\n📍 *${addr}*\n💳 Pago: ${pay}\n\n🛒 *PEDIDO:*\n${itemsStr}\n\n💰 *TOTAL: ${totalValue}€*`;
+    window.open(`https://wa.me/${phoneRestaurant}?text=${encodeURIComponent(text)}`, '_blank');
 }
