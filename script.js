@@ -475,35 +475,52 @@ function sendOrder() {
     const totalValue = cart.reduce((a, b) => a + b.price, 0).toFixed(2);
     const phoneRestaurant = "34642708622"; // TU NÚMERO
 
-    // 1. Crear URL del Ticket (Base64) para imprimir
+    // 1. Minificar datos para URL corta
+    const shortCart = cart.map(i => ({
+        t: i.title,
+        p: i.price,
+        d: i.desc,
+        n: i.note
+    }));
+
     const orderData = {
-        name: name,
-        phone: phoneClient,
-        addr: addr,
-        pay: pay,
-        cart: cart,
-        total: totalValue
+        n: name,
+        ph: phoneClient,
+        a: addr,
+        nt: note,
+        p: pay,
+        c: shortCart,
+        t: totalValue
     };
 
-    // Codificar datos de forma segura
+    // Codificación Robusta UTF-8 + Base64
     const jsonStr = JSON.stringify(orderData);
-    const base64Data = btoa(encodeURIComponent(jsonStr).replace(/%([0-9A-F]{2})/g,
-        function toSolidBytes(match, p1) {
-            return String.fromCharCode('0x' + p1);
-        }));
+    const base64Data = window.btoa(unescape(encodeURIComponent(jsonStr)));
 
     // Generar enlace
     const currentUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
     const ticketUrl = `${currentUrl}/ticket.html?data=${base64Data}`;
 
-    // 2. Texto WhatsApp
-    let waText = `🔥 *NUEVO PEDIDO APP*\n`;
-    waText += `👤 ${name}\n📞 ${phoneClient}\n`;
-    waText += `📍 ${addr}\n`;
-    waText += `💳 Pago: ${pay}\n\n`;
-    waText += `🛒 *PEDIDO:*\n${itemsStr}\n\n`;
-    waText += `💰 *TOTAL: ${totalValue}€*\n\n`;
-    waText += `🖨️ *VER TICKET PARA IMPRIMIR:*\n${ticketUrl}`;
+    // 2. Texto WhatsApp (Ticket Monoespaciado)
+    let waText = `\`\`\`\n`;
+    waText += `TASTY TACOS - PEDIDO\n`;
+    waText += `--------------------\n`;
+    waText += `CLIENTE: ${name}\n`;
+    waText += `TEL: ${phoneClient}\n`;
+    waText += `DIR: ${addr}\n`;
+    if (note) waText += `NOTA: ${note}\n`;
+    waText += `PAGO: ${pay}\n`;
+    waText += `--------------------\n`;
+
+    cart.forEach((item, i) => {
+        waText += `${i + 1}. ${item.title} .. ${item.price.toFixed(2)}€\n`;
+        if (item.note) waText += `   (Nota: ${item.note})\n`;
+    });
+
+    waText += `--------------------\n`;
+    waText += `TOTAL: ${totalValue}€\n`;
+    waText += `\`\`\`\n\n`;
+    waText += `🖨️ *IMPRIMIR TICKET AQUÍ:*\n${ticketUrl}`;
 
     // Abrir WhatsApp
     window.open(`https://wa.me/${phoneRestaurant}?text=${encodeURIComponent(waText)}`, '_blank');

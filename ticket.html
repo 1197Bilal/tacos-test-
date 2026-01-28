@@ -104,38 +104,40 @@
 
             if (dataBase64) {
                 try {
-                    const json = atob(dataBase64);
-                    const order = JSON.parse(decodeURIComponent(json)); // decodeURIComponent para tildes/emojis
+                    // Decodificación Robusta UTF-8
+                    const json = decodeURIComponent(escape(window.atob(dataBase64)));
+                    const order = JSON.parse(json);
 
-                    document.getElementById('t-name').innerText = order.name;
-                    document.getElementById('t-phone').innerText = order.phone;
-                    document.getElementById('t-addr').innerText = order.addr;
-                    if (order.note) {
-                        document.getElementById('t-note').innerText = order.note;
+                    // Mapeo de Claves Cortas
+                    document.getElementById('t-name').innerText = order.n;
+                    document.getElementById('t-phone').innerText = order.ph;
+                    document.getElementById('t-addr').innerText = order.a;
+                    if (order.nt) {
+                        document.getElementById('t-note').innerText = order.nt;
                         document.getElementById('t-note-container').style.display = 'block';
                     }
-                    document.getElementById('t-pay').innerText = order.pay;
+                    document.getElementById('t-pay').innerText = order.p;
                     document.getElementById('t-date').innerText = new Date().toLocaleString();
-                    document.getElementById('t-total').innerText = order.total + '€';
+                    document.getElementById('t-total').innerText = order.t + '€';
 
                     const itemsContainer = document.getElementById('t-items');
-                    order.cart.forEach((item, i) => {
+                    order.c.forEach((item, i) => {
                         const div = document.createElement('div');
                         div.innerHTML = `
                             <div class="item">
-                                <span>${i + 1}. ${item.title}</span>
-                                <span>${item.price.toFixed(2)}€</span>
+                                <span>${i + 1}. ${item.t}</span>
+                                <span>${item.p.toFixed(2)}€</span>
                             </div>
-                            <div style="font-size: 10px; color: #444; margin-bottom: 5px;">${item.desc}</div>
+                            <div style="font-size: 10px; color: #444; margin-bottom: 2px;">${item.d}</div>
+                            ${item.n ? `<div style="font-size: 11px; font-weight: bold; margin-bottom: 5px;">📝 ${item.n}</div>` : ''}
                         `;
                         itemsContainer.appendChild(div);
                     });
 
-                    // Auto-imprimir al cargar (opcional, pero útil)
                     setTimeout(() => window.print(), 500);
 
                 } catch (e) {
-                    document.body.innerHTML = "<h2 class='center'>Error al cargar el ticket 😞</h2>";
+                    document.body.innerHTML = "<h2 class='center'>Error al cargar el ticket 😞</h2><p class='center'>Enlace corrupto o incompleto</p>";
                     console.error(e);
                 }
             } else {
