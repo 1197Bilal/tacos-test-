@@ -483,5 +483,28 @@ function sendOrder() {
     ticketText += `TOTAL: ${totalValue}€\n`;
     ticketText += `\`\`\``;
 
-    window.open(`https://wa.me/${phoneRestaurant}?text=${encodeURIComponent(ticketText)}`, '_blank');
+    // Acción: ENVIAR/COMPARTIR
+    const phoneRestaurant = "34642708622";
+    const filename = `Ticket_Tasty_${name.replace(/\s/g, '_')}.txt`;
+
+    // 1. Intentar compartir el ARCHIVO REAL (para que llegue el icono azul de notepad)
+    if (navigator.canShare && navigator.share) {
+        const file = new File([ticketText.replace(/```/g, '')], filename, { type: 'text/plain' });
+
+        navigator.share({
+            files: [file],
+            title: 'Nuevo Pedido Tasty Tacos',
+            text: `🔥 Pedido de ${name}`
+        }).then(() => {
+            console.log('Compartido con éxito');
+        }).catch((error) => {
+            console.log('Error al compartir, usando método texto:', error);
+            // Fallback si cancela o falla
+            window.open(`https://wa.me/${phoneRestaurant}?text=${encodeURIComponent(ticketText)}`, '_blank');
+        });
+    } else {
+        // Fallback para ordenadores o navegadores que no soportan compartir archivos
+        alert("Tu navegador no permite enviar archivos directamente. Se enviará como texto.");
+        window.open(`https://wa.me/${phoneRestaurant}?text=${encodeURIComponent(ticketText)}`, '_blank');
+    }
 }
