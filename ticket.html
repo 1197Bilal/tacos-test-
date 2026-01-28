@@ -71,6 +71,8 @@
     <div>CLIENTE: <span id="t-name"></span></div>
     <div>TEL: <span id="t-phone"></span></div>
     <div>DIR: <span id="t-addr"></span></div>
+    <div id="t-note-container" style="display:none; font-weight:bold; margin: 5px 0;">NOTA: <span id="t-note"></span>
+    </div>
     <div>PAGO: <span id="t-pay"></span></div>
     <div>FECHA: <span id="t-date"></span></div>
 
@@ -108,6 +110,10 @@
                     document.getElementById('t-name').innerText = order.name;
                     document.getElementById('t-phone').innerText = order.phone;
                     document.getElementById('t-addr').innerText = order.addr;
+                    if (order.note) {
+                        document.getElementById('t-note').innerText = order.note;
+                        document.getElementById('t-note-container').style.display = 'block';
+                    }
                     document.getElementById('t-pay').innerText = order.pay;
                     document.getElementById('t-date').innerText = new Date().toLocaleString();
                     document.getElementById('t-total').innerText = order.total + '€';

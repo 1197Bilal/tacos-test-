@@ -441,10 +441,12 @@ function generateNotepad(name, phone, addr, pay, cart, total) {
 }
 
 // --- ENVIAR PEDIDO ---
+// --- ENVIAR PEDIDO ---
 function sendOrder() {
     const name = document.getElementById('cust-name').value;
     const phoneClient = document.getElementById('cust-phone').value;
     const addr = document.getElementById('cust-address').value;
+    const note = document.getElementById('cust-note').value;
     const pay = document.getElementById('cust-payment').value;
 
     if (!name || !phoneClient || !addr) {
@@ -452,14 +454,12 @@ function sendOrder() {
         return;
     }
 
-    // VALIDACIÓN DE DIRECCIÓN (Relaxed Check)
+    // VALIDACIÓN DE DIRECCIÓN
     const lowerAddr = addr.toLowerCase();
-    // Validamos si contiene "villalba" O el código postal "28400"
     const isValidLocation = lowerAddr.includes("villalba") || lowerAddr.includes("28400");
 
     if (!isValidLocation) {
-        // Solo avisar, pero permitir continuar si el usuario insiste (Confirmación)
-        const confirm = window.confirm("📍 ¿Seguro que es Collado Villalba?\n\nLa dirección no parece contener 'Villalba' o '28400'.\n\nPulsa ACEPTAR si la dirección es correcta.");
+        const confirm = window.confirm("📍 ¿Seguro el pedido es Collado Villalba?\n\nSi tu destino no es Collado Villalba no se confirmará el pedido.\n\nPulsa ACEPTAR solo si la dirección es correcta.");
         if (!confirm) return;
     }
 
@@ -467,40 +467,38 @@ function sendOrder() {
     const totalValue = cart.reduce((a, b) => a + b.price, 0).toFixed(2);
     const phoneRestaurant = "34642708622"; // TU NÚMERO
 
-    // Generar PDF (Silencioso - Solo descarga si funciona bien)
-    try { generateOrderPDF(name, addr, pay, cart, totalValue, phoneClient); } catch (e) { console.log('PDF skipped'); }
+    // 1. Crear URL del Ticket (Base64) para imprimir
+    const orderData = {
+        name: name,
+        phone: phoneClient,
+        addr: addr,
+        note: note,
+        pay: pay,
+        cart: cart,
+        total: totalValue
+    };
 
-    // Generar Ticket de Texto
-    let ticketContent = `TASTY TACOS - TICKET\n`;
-    ticketContent += `--------------------\n`;
-    ticketContent += `CLIENTE: ${name}\n`;
-    ticketContent += `TEL: ${phoneClient}\n`;
-    ticketContent += `DIR: ${addr}\n`;
-    ticketContent += `PAGO: ${pay}\n`;
-    ticketContent += `--------------------\n`;
-    cart.forEach((item, i) => {
-        ticketContent += `${i + 1}. ${item.title.substring(0, 20)}.. ${item.price.toFixed(2)}€\n`;
-    });
-    ticketContent += `--------------------\n`;
-    ticketContent += `TOTAL: ${totalValue}€\n`;
+    // Codificar datos de forma segura
+    const jsonStr = JSON.stringify(orderData);
+    const base64Data = btoa(encodeURIComponent(jsonStr).replace(/%([0-9A-F]{2})/g,
+        function toSolidBytes(match, p1) {
+            return String.fromCharCode('0x' + p1);
+        }));
 
-    // Lógica Inteligente de Compartir
-    const file = new File([ticketContent], `Pedido_${name}.txt`, { type: 'text/plain' });
-    const waLink = `https://wa.me/${phoneRestaurant}?text=${encodeURIComponent('```' + ticketContent + '```')}`;
+    // Generar enlace
+    const currentUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+    const ticketUrl = `${currentUrl}/ticket.html?data=${base64Data}`;
 
-    if (navigator.canShare && navigator.share && navigator.canShare({ files: [file] })) {
-        navigator.share({
-            files: [file],
-            title: 'Ticket Tasty Tacos',
-            text: 'Nuevo Pedido'
-        }).then(() => {
-            // Éxito: Se ha abierto el menú compartir
-        }).catch((err) => {
-            // Si el usuario cancela o falla, abrimos WhatsApp con el texto
-            window.location.href = waLink;
-        });
-    } else {
-        // Fallback inmediato para PC / Navegadores antiguos
-        window.location.href = waLink;
-    }
+    // 2. Texto WhatsApp
+    let waText = `🔥 *NUEVO PEDIDO APP*\n`;
+    waText += `👤 ${name}\n📞 ${phoneClient}\n`;
+    waText += `📍 ${addr}\n`;
+    if (note) waText += `📝 Nota: ${note}\n`;
+    waText += `💳 Pago: ${pay}\n\n`;
+    waText += `🛒 *PEDIDO:*\n${itemsStr}\n\n`;
+    waText += `💰 *TOTAL: ${totalValue}€*\n\n`;
+    waText += `🖨️ *VER TICKET PARA IMPRIMIR:*\n${ticketUrl}`;
+
+    // Abrir WhatsApp
+    window.open(`https://wa.me/${phoneRestaurant}?text=${encodeURIComponent(waText)}`, '_blank');
 }
