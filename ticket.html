@@ -74,6 +74,7 @@
     <div id="t-note-container" style="display:none; font-weight:bold; margin: 5px 0;">NOTA: <span id="t-note"></span>
     </div>
     <div>PAGO: <span id="t-pay"></span></div>
+    <div id="t-change-container" style="display:none;">CAMBIO: <span id="t-change"></span>€</div>
     <div>FECHA: <span id="t-date"></span></div>
 
     <div class="line"></div>
@@ -126,6 +127,10 @@
                     }
 
                     document.getElementById('t-pay').innerText = order.p;
+                    if (order.ch) {
+                        document.getElementById('t-change').innerText = order.ch;
+                        document.getElementById('t-change-container').style.display = 'block';
+                    }
                     document.getElementById('t-date').innerText = new Date().toLocaleString();
                     document.getElementById('t-total').innerText = order.t + '€';
 

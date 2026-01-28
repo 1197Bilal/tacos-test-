@@ -313,9 +313,10 @@ function closeCheckout() {
     document.getElementById('modal-checkout').classList.remove('flex');
 }
 
-function toggleBizum() {
+function togglePaymentDetails() {
     const val = document.getElementById('cust-payment').value;
     document.getElementById('bizum-details').style.display = val === 'Bizum' ? 'block' : 'none';
+    document.getElementById('change-field').style.display = val === 'Efectivo' ? 'block' : 'none';
 }
 
 // --- GOOGLE MAPS AUTOCOMPLETE ---
@@ -452,6 +453,7 @@ function sendOrder() {
     const phoneClient = document.getElementById('cust-phone').value;
     const addr = document.getElementById('cust-address').value;
     const pay = document.getElementById('cust-payment').value;
+    const change = document.getElementById('cust-change').value;
 
     if (!name || !phoneClient || !addr) {
         alert("⚠️ Faltan datos: Nombre, Teléfono y Dirección son obligatorios");
@@ -488,6 +490,7 @@ function sendOrder() {
         ph: phoneClient,
         a: addr,
         p: pay,
+        ch: change,
         c: shortCart,
         t: totalValue
     };
@@ -510,6 +513,7 @@ function sendOrder() {
     waText += `TEL: ${phoneClient}\n`;
     waText += `DIR: ${addr}\n`;
     waText += `PAGO: ${pay}\n`;
+    if (pay === 'Efectivo' && change) waText += `CAMBIO: ${change}€\n`;
     waText += `--------------------\n`;
 
     cart.forEach((item, i) => {

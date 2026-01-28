@@ -288,15 +288,20 @@
 
                 <select id="cust-payment"
                     class="w-full bg-black border border-white/10 rounded-xl p-3 text-white focus:border-secondary outline-none"
-                    onchange="toggleBizum()">
+                    onchange="togglePaymentDetails()">
                     <option value="Efectivo">💵 Efectivo</option>
                     <option value="Tarjeta">💳 Tarjeta (Datáfono)</option>
                     <option value="Bizum">📱 Bizum</option>
                 </select>
 
+                <div id="change-field" class="hidden">
+                    <input type="number" id="cust-change" placeholder="¿Llevar cambio de cuánto? (Ej: 20€)"
+                        class="w-full bg-black border border-white/10 rounded-xl p-3 text-white focus:border-secondary outline-none">
+                </div>
+
                 <div id="bizum-details" class="hidden bg-[#222] border border-primary/40 p-3 rounded-xl text-center">
                     <p class="text-gray-400 text-xs">Móvil para Bizum:</p>
-                    <p class="text-xl font-black text-white">636 74 55 84</p>
+                    <p class="text-xl font-black text-white">642 70 86 22</p>
                     <p class="text-[10px] text-primary font-bold mt-1">⚠️ Envía captura al WhatsApp</p>
                 </div>
             </div>
