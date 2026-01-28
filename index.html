@@ -279,11 +279,13 @@
             </div>
 
             <div class="space-y-4">
-                <input type="text" id="cust-name" placeholder="Tu Nombre"
+                <input type="text" id="cust-name" placeholder="Tu Nombre" oninput="validateCheckoutForm()"
                     class="w-full bg-black border border-white/10 rounded-xl p-3 text-white focus:border-secondary outline-none">
                 <input type="tel" id="cust-phone" placeholder="Tu Teléfono (Obligatorio)"
+                    oninput="validateCheckoutForm()"
                     class="w-full bg-black border border-white/10 rounded-xl p-3 text-white focus:border-secondary outline-none">
                 <input type="text" id="cust-address" placeholder="Dirección Completa (Obligatorio)"
+                    oninput="validateCheckoutForm()"
                     class="w-full bg-black border border-white/10 rounded-xl p-3 text-white focus:border-secondary outline-none">
 
                 <select id="cust-payment"
@@ -306,8 +308,8 @@
                 </div>
             </div>
 
-            <button onclick="sendOrder()"
-                class="w-full mt-6 py-4 bg-[#25D366] text-black font-black text-lg rounded-xl uppercase shadow-lg shadow-green-900/30 flex items-center justify-center gap-2">
+            <button id="btn-confirm-order" onclick="sendOrder()" disabled
+                class="w-full mt-6 py-4 bg-gray-600 text-white/50 font-black text-lg rounded-xl uppercase flex items-center justify-center gap-2 transition-all duration-500 cursor-not-allowed opacity-50">
                 <span>Confirmar en WhatsApp</span> 🚀
             </button>
         </div>
