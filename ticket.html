@@ -97,13 +97,14 @@
     </button>
 
     <script>
-        // Función para decodificar Base64 de forma segura (URL-Safe + UTF8)
+        // Decodificador seguro para UTF-8 y URL-Safe
         function safeAtob(str) {
-            // Revertir cambios de URL-Safe
             str = str.replace(/-/g, '+').replace(/_/g, '/');
-            // Añadir padding si falta
             while (str.length % 4) str += '=';
-            return decodeURIComponent(escape(window.atob(str)));
+            const binary = window.atob(str);
+            const bytes = new Uint8Array(binary.length);
+            for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+            return new TextDecoder().decode(bytes);
         }
 
         function init() {
@@ -115,28 +116,32 @@
                     const json = safeAtob(dataRaw);
                     const order = JSON.parse(json);
 
-                    // Mapeo
                     document.getElementById('t-name').innerText = order.n;
                     document.getElementById('t-phone').innerText = order.ph;
                     document.getElementById('t-addr').innerText = order.a;
+
                     if (order.nt) {
                         document.getElementById('t-note').innerText = order.nt;
                         document.getElementById('t-note-container').style.display = 'block';
                     }
+
                     document.getElementById('t-pay').innerText = order.p;
                     document.getElementById('t-date').innerText = new Date().toLocaleString();
                     document.getElementById('t-total').innerText = order.t + '€';
 
                     const itemsContainer = document.getElementById('t-items');
+
+                    // Manejar formato de array corto [title, price, desc, note]
                     order.c.forEach((item, i) => {
+                        const [title, price, desc, note] = item;
                         const div = document.createElement('div');
                         div.innerHTML = `
                             <div class="item">
-                                <span>${i + 1}. ${item.t}</span>
-                                <span>${item.p.toFixed(2)}€</span>
+                                <span>${i + 1}. ${title}</span>
+                                <span>${price.toFixed(2)}€</span>
                             </div>
-                            <div style="font-size: 10px; color: #444; margin-bottom: 2px;">${item.d}</div>
-                            ${item.n ? `<div style="font-size: 11px; font-weight: bold; margin-bottom: 5px;">📝 ${item.n}</div>` : ''}
+                            <div style="font-size: 10px; color: #444; margin-bottom: 2px;">${desc}</div>
+                            ${note ? `<div style="font-size: 11px; font-weight: bold; margin-bottom: 5px;">📝 ${note}</div>` : ''}
                         `;
                         itemsContainer.appendChild(div);
                     });
@@ -147,8 +152,8 @@
                     document.body.innerHTML = `
                         <div class='center'>
                             <h2>Error al cargar el ticket 😞</h2>
-                            <p style='font-size:10px; color:gray;'>${e.message}</p>
-                            <p>Intenta abrirlo desde otro navegador.</p>
+                            <p style='font-size:11px; color:red;'>${e.message}</p>
+                            <p style='font-size:10px;'>Copia el enlace y pégalo en Chrome o Safari directamente.</p>
                         </div>`;
                     console.error("Decode Error:", e);
                 }
