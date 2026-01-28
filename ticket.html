@@ -97,18 +97,25 @@
     </button>
 
     <script>
-        // Decodificar datos de la URL
+        // Función para decodificar Base64 de forma segura (URL-Safe + UTF8)
+        function safeAtob(str) {
+            // Revertir cambios de URL-Safe
+            str = str.replace(/-/g, '+').replace(/_/g, '/');
+            // Añadir padding si falta
+            while (str.length % 4) str += '=';
+            return decodeURIComponent(escape(window.atob(str)));
+        }
+
         function init() {
             const params = new URLSearchParams(window.location.search);
-            const dataBase64 = params.get('data');
+            const dataRaw = params.get('data');
 
-            if (dataBase64) {
+            if (dataRaw) {
                 try {
-                    // Decodificación Robusta UTF-8
-                    const json = decodeURIComponent(escape(window.atob(dataBase64)));
+                    const json = safeAtob(dataRaw);
                     const order = JSON.parse(json);
 
-                    // Mapeo de Claves Cortas
+                    // Mapeo
                     document.getElementById('t-name').innerText = order.n;
                     document.getElementById('t-phone').innerText = order.ph;
                     document.getElementById('t-addr').innerText = order.a;
@@ -137,8 +144,13 @@
                     setTimeout(() => window.print(), 500);
 
                 } catch (e) {
-                    document.body.innerHTML = "<h2 class='center'>Error al cargar el ticket 😞</h2><p class='center'>Enlace corrupto o incompleto</p>";
-                    console.error(e);
+                    document.body.innerHTML = `
+                        <div class='center'>
+                            <h2>Error al cargar el ticket 😞</h2>
+                            <p style='font-size:10px; color:gray;'>${e.message}</p>
+                            <p>Intenta abrirlo desde otro navegador.</p>
+                        </div>`;
+                    console.error("Decode Error:", e);
                 }
             } else {
                 document.body.innerHTML = "<h2 class='center'>No hay datos de pedido</h2>";

@@ -492,9 +492,11 @@ function sendOrder() {
         t: totalValue
     };
 
-    // Codificación Robusta UTF-8 + Base64
+    // Codificación Robusta UTF-8 + Base64 (URL Safe)
     const jsonStr = JSON.stringify(orderData);
-    const base64Data = window.btoa(unescape(encodeURIComponent(jsonStr)));
+    let base64Data = window.btoa(unescape(encodeURIComponent(jsonStr)));
+    // Hacerla segura para URL (WhatsApp no se marea con + o /)
+    base64Data = base64Data.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 
     // Generar enlace
     const currentUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
