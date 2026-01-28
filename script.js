@@ -241,14 +241,14 @@ function addToCart() {
         const extras = Array.from(document.querySelectorAll('input[name="extraSauce"]:checked')).map(cb => cb.value);
 
         // Si el formato está oculto (Bowls), no ponemos "Solo • "
-        const formatStr = document.getElementById('step-format').classList.contains('hidden') ? "" : `${format} • `;
+        const formatStr = document.getElementById('step-format').classList.contains('hidden') ? "" : `${format} ▪️ `;
         detail = `${formatStr}Salsa ${mainSauce}`;
 
         if (format === 'Menú' && !document.getElementById('step-drink').classList.contains('hidden')) {
             const selectedDrink = document.querySelector('input[name="menuDrink"]:checked').value;
-            detail += ` • Bebida: ${selectedDrink}`;
+            detail += ` ▪️ Bebida: ${selectedDrink}`;
         }
-        if (extras.length > 0) detail += ` • Extras: ${extras.join(', ')}`;
+        if (extras.length > 0) detail += ` ▪️ Extras: ${extras.join(', ')}`;
     }
 
     const title = isDrinkOnly ? "Bebida Extra" : tempItem.name;

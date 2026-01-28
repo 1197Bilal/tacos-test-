@@ -154,8 +154,8 @@
                                 <span>${i + 1}. ${item.t}</span>
                                 <span>${item.p.toFixed(2)}€</span>
                             </div>
-                            <div style="font-size: 10px; color: #444; margin-bottom: 2px;">${item.d}</div>
-                            ${item.n ? `<div style="font-size: 11px; font-weight: bold; margin-bottom: 5px;">📝 ${item.n}</div>` : ''}
+                            <div style="font-size: 12px; margin-bottom: 3px;">${item.d}</div>
+                            ${item.n ? `<div style="font-size: 13px; margin-bottom: 5px;">> NOTA: ${item.n}</div>` : ''}
                         `;
                         itemsContainer.appendChild(div);
                     });
