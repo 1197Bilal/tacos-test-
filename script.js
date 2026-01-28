@@ -335,7 +335,8 @@ function initAutocomplete() {
             console.warn("Google Maps API not loaded or invalid Key. Using manual input.");
         }
     } catch (e) {
-        console.error("Error initializing Google Autocomplete:", e);
+        // Silenciar error en consola, no bloquear
+        console.warn("Google Maps init warning:", e);
     }
 }
 
@@ -451,11 +452,14 @@ function sendOrder() {
         return;
     }
 
-    // VALIDACIÓN DE DIRECCIÓN (COLLADO VILLALBA - 28400)
-    const isValidLocation = addr.toLowerCase().includes("villalba") || addr.includes("28400");
+    // VALIDACIÓN DE DIRECCIÓN (Relaxed Check)
+    const lowerAddr = addr.toLowerCase();
+    // Validamos si contiene "villalba" O el código postal "28400"
+    const isValidLocation = lowerAddr.includes("villalba") || lowerAddr.includes("28400");
 
     if (!isValidLocation) {
-        const confirm = window.confirm("⚠️ La dirección no parece ser de Collado Villalba (28400).\n\n¿Estás seguro de que es correcta? Solo repartimos en esta zona.");
+        // Solo avisar, pero permitir continuar si el usuario insiste (Confirmación)
+        const confirm = window.confirm("📍 ¿Seguro que es Collado Villalba?\n\nLa dirección no parece contener 'Villalba' o '28400'.\n\nPulsa ACEPTAR si la dirección es correcta.");
         if (!confirm) return;
     }
 
@@ -463,48 +467,40 @@ function sendOrder() {
     const totalValue = cart.reduce((a, b) => a + b.price, 0).toFixed(2);
     const phoneRestaurant = "34642708622"; // TU NÚMERO
 
-    // Generar y descargar archivos para impresión (PDF y TXT)
-    generateOrderPDF(name, addr, pay, cart, totalValue, phoneClient);
-    generateNotepad(name, phoneClient, addr, pay, cart, totalValue);
+    // Generar PDF (Silencioso - Solo descarga si funciona bien)
+    try { generateOrderPDF(name, addr, pay, cart, totalValue, phoneClient); } catch (e) { console.log('PDF skipped'); }
 
-    // Formatear mensaje de WhatsApp como "Ticket de Caja" (Monoespaciado)
-    let ticketText = `\`\`\`\n`;
-    ticketText += `TASTY TACOS - TICKET\n`;
-    ticketText += `--------------------\n`;
-    ticketText += `CLIENTE: ${name}\n`;
-    ticketText += `TEL: ${phoneClient}\n`;
-    ticketText += `DIR: ${addr}\n`;
-    ticketText += `PAGO: ${pay}\n`;
-    ticketText += `--------------------\n`;
+    // Generar Ticket de Texto
+    let ticketContent = `TASTY TACOS - TICKET\n`;
+    ticketContent += `--------------------\n`;
+    ticketContent += `CLIENTE: ${name}\n`;
+    ticketContent += `TEL: ${phoneClient}\n`;
+    ticketContent += `DIR: ${addr}\n`;
+    ticketContent += `PAGO: ${pay}\n`;
+    ticketContent += `--------------------\n`;
     cart.forEach((item, i) => {
-        ticketText += `${i + 1}. ${item.title.substring(0, 15)}.. ${item.price.toFixed(2)}€\n`;
+        ticketContent += `${i + 1}. ${item.title.substring(0, 20)}.. ${item.price.toFixed(2)}€\n`;
     });
-    ticketText += `--------------------\n`;
-    ticketText += `TOTAL: ${totalValue}€\n`;
-    ticketText += `\`\`\``;
+    ticketContent += `--------------------\n`;
+    ticketContent += `TOTAL: ${totalValue}€\n`;
 
-    // Acción: ENVIAR/COMPARTIR
-    const phoneRestaurant = "34642708622";
-    const filename = `Ticket_Tasty_${name.replace(/\s/g, '_')}.txt`;
+    // Lógica Inteligente de Compartir
+    const file = new File([ticketContent], `Pedido_${name}.txt`, { type: 'text/plain' });
+    const waLink = `https://wa.me/${phoneRestaurant}?text=${encodeURIComponent('```' + ticketContent + '```')}`;
 
-    // 1. Intentar compartir el ARCHIVO REAL (para que llegue el icono azul de notepad)
-    if (navigator.canShare && navigator.share) {
-        const file = new File([ticketText.replace(/```/g, '')], filename, { type: 'text/plain' });
-
+    if (navigator.canShare && navigator.share && navigator.canShare({ files: [file] })) {
         navigator.share({
             files: [file],
-            title: 'Nuevo Pedido Tasty Tacos',
-            text: `🔥 Pedido de ${name}`
+            title: 'Ticket Tasty Tacos',
+            text: 'Nuevo Pedido'
         }).then(() => {
-            console.log('Compartido con éxito');
-        }).catch((error) => {
-            console.log('Error al compartir, usando método texto:', error);
-            // Fallback si cancela o falla
-            window.open(`https://wa.me/${phoneRestaurant}?text=${encodeURIComponent(ticketText)}`, '_blank');
+            // Éxito: Se ha abierto el menú compartir
+        }).catch((err) => {
+            // Si el usuario cancela o falla, abrimos WhatsApp con el texto
+            window.location.href = waLink;
         });
     } else {
-        // Fallback para ordenadores o navegadores que no soportan compartir archivos
-        alert("Tu navegador no permite enviar archivos directamente. Se enviará como texto.");
-        window.open(`https://wa.me/${phoneRestaurant}?text=${encodeURIComponent(ticketText)}`, '_blank');
+        // Fallback inmediato para PC / Navegadores antiguos
+        window.location.href = waLink;
     }
 }
