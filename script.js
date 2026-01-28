@@ -487,7 +487,6 @@ function sendOrder() {
         n: name,
         ph: phoneClient,
         a: addr,
-        nt: note,
         p: pay,
         c: shortCart,
         t: totalValue
@@ -508,7 +507,6 @@ function sendOrder() {
     waText += `CLIENTE: ${name}\n`;
     waText += `TEL: ${phoneClient}\n`;
     waText += `DIR: ${addr}\n`;
-    if (note) waText += `NOTA: ${note}\n`;
     waText += `PAGO: ${pay}\n`;
     waText += `--------------------\n`;
 
